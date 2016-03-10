@@ -60,7 +60,8 @@
 			</div>
 			<div class="row">
 			<div class="col-sm-3">
-				<input class="btn btn-info" type="submit" value="Save data">
+				<input class="btn btn-info hidden-xs" type="submit" value="Save data 1">
+				<input class="btn btn-info btn-block visible-xs-block" type="submit" value="Save data 2">
 				</div>
 			</div>
 		</form>
