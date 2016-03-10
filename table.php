@@ -7,9 +7,38 @@ require_once("../../config.php");
 //create connection_aborted
 $mysql = new mysqli("localhost",$db_username, $db_password,"webpr2016_marvin");
 
+/*
+IF THERE IS ?DELETE=ROW_ID in the url
+*/
+if(isset($_GET["delete"])){
+	
+	echo "Deleting row with id:".$_GET["delete"];
+	
+	$stmt = $mysql->prepare("UPDATE messages_sample SET deleted=NOW() WHERE id = ?");
+	
+	echo $mysql->error;
+	
+	//replace the ?
+	$stmt->bind_param("i", $_GET["delete"]);
+	
+	if($stmt->execute()){
+		echo "deleted successfully";
+	}else{
+		echo $stmt->error;
+	}
+	
+	//closes the statement, so others can use connection
+	$stmt->close();
+}
+
+
+
+
 //SQL sentence
 $stmt = $mysql->prepare("SELECT id, recipient, message,
- created FROM messages_sample ORDER BY created DESC LIMIT 10");
+ created FROM messages_sample WHERE deleted IS NULL ORDER BY created DESC LIMIT 10 ");
+ 
+ //WHERE deleted IS NULL show only those that are not deleted
 
 //if error in sentence
 echo $mysql->error;
@@ -28,10 +57,11 @@ $table_html .="<th>ID</th>";
 $table_html .="<th>Recipient</th>";
 $table_html .="<th>Message</th>";
 $table_html .="<th>Created</th>";
+$table_html .="<th>Delete?</th>";
 $table_html .="</tr>";
 		
 //GET RESULT
-//we have multiple rows
+//we have multiple rows.  so if we have 10 results to show, this while command triggers showing info 10 times (loop)
 while($stmt->fetch()){
 	
 	//DO SOMETHING FOR EACH ROW
@@ -41,6 +71,7 @@ $table_html .="<td>".$id."</td>";
 $table_html .="<td>".$recipient."</td>";
 $table_html .="<td>".$message."</td>";
 $table_html .="<td>".$created."</td>";
+$table_html .="<td><a href='?delete=".$id."'>X</a></td>";
 $table_html .="</tr>"; //end row
 	
 	

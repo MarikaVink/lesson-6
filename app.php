@@ -104,7 +104,7 @@
 		
 		$stmt = $mysql->prepare("INSERT INTO messages_sample(recipient, message, sender) VALUES (?,?,?)");
 		
-		//echo error
+		//echo error if something in line above has a spelling or other kind of mistake
 		echo $mysql->error;
 		
 		
